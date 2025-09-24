@@ -29,21 +29,21 @@ DEFAULT_DATA_QUALITY_RULESET = """
 # Script generated for node customer_trusted
 customer_trusted_node1758549004647 = glueContext.create_dynamic_frame.from_catalog(database="steadi", table_name="customer_trusted", transformation_ctx="customer_trusted_node1758549004647")
 
-# Script generated for node accelerometer_landing
-accelerometer_landing_node1758549007732 = glueContext.create_dynamic_frame.from_catalog(database="steadi", table_name="accelerometer_landing", transformation_ctx="accelerometer_landing_node1758549007732")
+# Script generated for node accelerometer_trusted
+accelerometer_trusted_node1758549007732 = glueContext.create_dynamic_frame.from_catalog(database="steadi", table_name="accelerometer_trusted", transformation_ctx="accelerometer_trusted_node1758549007732")
 
 # Script generated for node Join
-Join_node1758549120300 = Join.apply(frame1=customer_trusted_node1758549004647, frame2=accelerometer_landing_node1758549007732, keys1=["email"], keys2=["user"], transformation_ctx="Join_node1758549120300")
+Join_node1758549120300 = Join.apply(frame1=customer_trusted_node1758549004647, frame2=accelerometer_trusted_node1758549007732, keys1=["email"], keys2=["user"], transformation_ctx="Join_node1758549120300")
 
 # Script generated for node filter
-SqlQuery2937 = '''
+SqlQuery3351 = '''
 select distinct customername, email, phone, birthday, serialnumber,
 registrationdate, lastupdatedate, sharewithresearchasofdate, 
 sharewithpublicasofdate, sharewithfriendsasofdate
 from myDataSource;
 
 '''
-filter_node1758632570993 = sparkSqlQuery(glueContext, query = SqlQuery2937, mapping = {"myDataSource":Join_node1758549120300}, transformation_ctx = "filter_node1758632570993")
+filter_node1758632570993 = sparkSqlQuery(glueContext, query = SqlQuery3351, mapping = {"myDataSource":Join_node1758549120300}, transformation_ctx = "filter_node1758632570993")
 
 # Script generated for node customer curated
 EvaluateDataQuality().process_rows(frame=filter_node1758632570993, ruleset=DEFAULT_DATA_QUALITY_RULESET, publishing_options={"dataQualityEvaluationContext": "EvaluateDataQuality_node1758550683427", "enableDataQualityResultsPublishing": True}, additional_options={"dataQualityResultsPublishing.strategy": "BEST_EFFORT", "observations.scope": "ALL"})
